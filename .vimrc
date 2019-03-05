@@ -42,7 +42,7 @@ Plug 'scrooloose/nerdcommenter'
 " Class/module browser
 Plug 'majutsushi/tagbar'
 " Code and files fuzzy finder
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/vim-fzf'
 " Extension to ctrlp, for fuzzy command finder
 Plug 'fisadev/vim-ctrlp-cmdpalette'
 " Zen coding
@@ -62,8 +62,6 @@ Plug 'rosenfeld/conque-term'
 Plug 'fisadev/FixedTaskList.vim'
 " Surround
 Plug 'tpope/vim-surround'
-" Autoclose
-Plug 'Townk/vim-autoclose'
 " Indent text object
 Plug 'michaeljsmith/vim-indent-object'
 " Indentation based movements
@@ -158,7 +156,7 @@ set hlsearch
 syntax on
 
 " show line numbers
-set nu
+set rnu
 
 " tab navigation mappings
 map tn :tabn<CR>
