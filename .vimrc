@@ -1,7 +1,3 @@
-" Fisa-vim-config
-" http://fisadev.github.io/fisa-vim-config/
-" version: 8.3.1
-
 " ============================================================================
 " Vim-plug initialization
 " Avoid modify this section, unless you are very sure of what you are doing
@@ -22,48 +18,35 @@ if vim_plug_just_installed
 endif
 
 " Obscure hacks done, you can now modify the rest of the .vimrc as you wish :)
-
 " ============================================================================
 " Active plugins
-" You can disable or add new ones here:
-
-" this needs to be here, so vim-plug knows we are declaring the plugins we
-" want to use
 call plug#begin('~/.vim/plugged')
 
-" Plugins from github repos:
+" Plugins from cool guys:
 
-" Override configs by directory 
-Plug 'arielrossanigo/dir-configs-override.vim'
-" Better file browser
+" Tree explorer
 Plug 'scrooloose/nerdtree'
-" Code commenter
 Plug 'scrooloose/nerdcommenter'
 " Class/module browser
 Plug 'majutsushi/tagbar'
 " Code and files fuzzy finder
-Plug 'junegunn/vim-fzf'
-" Extension to ctrlp, for fuzzy command finder
-Plug 'fisadev/vim-ctrlp-cmdpalette'
-" Zen coding
-Plug 'mattn/emmet-vim'
-" Git integration
-Plug 'motemen/git-vim'
-" Tab list panel
-Plug 'kien/tabman.vim'
+Plug 'junegunn/fzf.vim'
+" Distraction free
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+" Visual parenthesis
+Plug 'junegunn/rainbow_parenthesis.vim'
 " Airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " Terminal Vim with 256 colors colorscheme
 Plug 'fisadev/fisa-vim-colorscheme'
-" Consoles as buffers
-Plug 'rosenfeld/conque-term'
 " Pending tasks list
 Plug 'fisadev/FixedTaskList.vim'
 " Surround
 Plug 'tpope/vim-surround'
 " Indent text object
-Plug 'michaeljsmith/vim-indent-object'
+Plug 'tweekmonster/braceless.vim'
 " Indentation based movements
 Plug 'jeetsukumaran/vim-indentwise'
 " Python autocompletion, go to definition.
@@ -87,18 +70,12 @@ Plug 't9md/vim-choosewin'
 Plug 'scrooloose/syntastic'
 " Paint css colors with the real color
 Plug 'lilydjwg/colorizer'
-" Ack code search (requires ack installed in the system)
-Plug 'mileszs/ack.vim'
+" Python 3.7 syntax
+Plug 'vim-python/python-syntax'
 if has('python')
     " YAPF formatter for Python
     Plug 'pignacio/vim-yapf-format'
 endif
-" Relative numbering of lines (0 is the current line)
-" (disabled by default because is very intrusive and can't be easily toggled
-" on/off. When the plugin is present, will always activate the relative 
-" numbering every time you go to normal mode. Author refuses to add a setting 
-" to avoid that)
-" Plug 'myusuf3/numbers.vim'
 
 " Plugins from vim-scripts repos:
 
@@ -106,10 +83,10 @@ endif
 Plug 'vim-scripts/IndexedSearch'
 " XML/HTML tags navigation
 Plug 'vim-scripts/matchit.zip'
-" Gvim colorscheme
-Plug 'vim-scripts/Wombat'
 " Yank history navigation
 Plug 'vim-scripts/YankRing.vim'
+" Tetris!
+Plug 'vim-scripts/TeTrIs.vim'
 
 " Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
@@ -138,6 +115,10 @@ set expandtab
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
+set backspace=2
+
+" mouse
+set mouse=a
 
 " tab length exceptions on some file types
 autocmd FileType html setlocal shiftwidth=4 tabstop=4 softtabstop=4
@@ -169,23 +150,44 @@ imap <C-S-Right> <ESC>:tabn<CR>
 map <C-S-Left> :tabp<CR>
 imap <C-S-Left> <ESC>:tabp<CR>
 
-" navigate windows with meta+arrows
-map <M-Right> <c-w>l
-map <M-Left> <c-w>h
-map <M-Up> <c-w>k
-map <M-Down> <c-w>j
-imap <M-Right> <ESC><c-w>l
-imap <M-Left> <ESC><c-w>h
-imap <M-Up> <ESC><c-w>k
-imap <M-Down> <ESC><c-w>j
+" navigate windows with ctrl+arrows
+map <C-Right> <c-w>l
+map <C-Left> <c-w>h
+map <C-Up> <c-w>k
+map <C-Down> <c-w>j
+imap <C-Right> <ESC><c-w>l
+imap <C-Left> <ESC><c-w>h
+imap <C-Up> <ESC><c-w>k
+imap <C-Down> <ESC><c-w>j
 
-" old autocomplete keyboard shortcut
-imap <C-J> <C-X><C-O>
+" my shortcuts from old config
+nnoremap <C-P> :FZF<CR>
+tnoremap <C-W><C-P> <C-W>:FZF<CR>
+nnoremap gb :Buffers<CR>
+tnoremap <C-W>gb <C-W>:Buffers<CR>
+nnoremap gl :Lines<CR>
+tnoremap <C-W>gl <C-W>:Lines<CR>
+nnoremap <F2> :mksession! Session.vim<CR>
+nnoremap <F3> :source Session.vim<CR>
+nnoremap <F12> :term<CR>
+command! ReloadConf source ~/.vimrc
+command! Conf edit ~/.vimrc
+
+" reopen files on last position
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+" autosave on lost focus
+au FocusLost * silent! wa
+" %% for current file dir
+cnoremap %% <C-R>=expand('%:h').'/'<CR>
+
+" airline tabs
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_splits = 0
 
 " Comment this line to enable autocompletion preview window
 " (displays documentation related to the selected completion option)
 " Disabled by default because preview makes the window flicker
-set completeopt-=preview
+" set completeopt-=preview
 
 " save as sudo
 ca w!! w !sudo tee "%"
@@ -200,11 +202,6 @@ if (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256') || has('nvim')
     colorscheme fisa
 else
     colorscheme delek
-endif
-
-" colors for gvim
-if has('gui_running')
-    colorscheme wombat
 endif
 
 " when scrolling, keep cursor 3 lines away from screen border
@@ -261,41 +258,6 @@ let NERDTreeIgnore = ['\.pyc$', '\.pyo$']
 " show pending tasks list
 map <F2> :TaskList<CR>
 
-" CtrlP ------------------------------
-
-" file finder mapping
-let g:ctrlp_map = ',e'
-" tags (symbols) in current file finder mapping
-nmap ,g :CtrlPBufTag<CR>
-" tags (symbols) in all files finder mapping
-nmap ,G :CtrlPBufTagAll<CR>
-" general code finder in all files mapping
-nmap ,f :CtrlPLine<CR>
-" recent files finder mapping
-nmap ,m :CtrlPMRUFiles<CR>
-" commands finder mapping
-nmap ,c :CtrlPCmdPalette<CR>
-" to be able to call CtrlP with default search text
-function! CtrlPWithSearchText(search_text, ctrlp_command_end)
-    execute ':CtrlP' . a:ctrlp_command_end
-    call feedkeys(a:search_text)
-endfunction
-" same as previous mappings, but calling with current word as default text
-nmap ,wg :call CtrlPWithSearchText(expand('<cword>'), 'BufTag')<CR>
-nmap ,wG :call CtrlPWithSearchText(expand('<cword>'), 'BufTagAll')<CR>
-nmap ,wf :call CtrlPWithSearchText(expand('<cword>'), 'Line')<CR>
-nmap ,we :call CtrlPWithSearchText(expand('<cword>'), '')<CR>
-nmap ,pe :call CtrlPWithSearchText(expand('<cfile>'), '')<CR>
-nmap ,wm :call CtrlPWithSearchText(expand('<cword>'), 'MRUFiles')<CR>
-nmap ,wc :call CtrlPWithSearchText(expand('<cword>'), 'CmdPalette')<CR>
-" don't change working directory
-let g:ctrlp_working_path_mode = 0
-" ignore these files and folders on file finder
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|node_modules)$',
-  \ 'file': '\.pyc$\|\.pyo$',
-  \ }
-
 " Syntastic ------------------------------
 
 " show list of errors and warnings on the current file
@@ -350,11 +312,6 @@ let g:neocomplcache_same_filetype_lists._ = '_'
 let g:tabman_toggle = 'tl'
 let g:tabman_focus  = 'tf'
 
-" Autoclose ------------------------------
-
-" Fix to let ESC work as espected with Autoclose plugin
-let g:AutoClosePumvisible = {"ENTER": "\<C-Y>", "ESC": "\<ESC>"}
-
 " DragVisuals ------------------------------
 
 " mappings to move blocks in 4 directions
@@ -394,15 +351,16 @@ let g:airline_powerline_fonts = 0
 let g:airline_theme = 'bubblegum'
 let g:airline#extensions#whitespace#enabled = 0
 
-" to use fancy symbols for airline, uncomment the following lines and use a
-" patched font (more info on the README.rst)
-"if !exists('g:airline_symbols')
-"   let g:airline_symbols = {}
-"endif
-"let g:airline_left_sep = '⮀'
-"let g:airline_left_alt_sep = '⮁'
-"let g:airline_right_sep = '⮂'
-"let g:airline_right_alt_sep = '⮃'
-"let g:airline_symbols.branch = '⭠'
-"let g:airline_symbols.readonly = '⭤'
-"let g:airline_symbols.linenr = '⭡'
+if !exists('g:airline_symbols')
+   let g:airline_symbols = {}
+endif
+let g:airline_left_sep = '⮀'
+let g:airline_left_alt_sep = '⮁'
+let g:airline_right_sep = '⮂'
+let g:airline_right_alt_sep = '⮃'
+let g:airline_symbols.branch = '⭠'
+let g:airline_symbols.readonly = '⭤'
+let g:airline_symbols.linenr = '⭡'
+
+" Python 3.7 syntax for all
+let g:python_highlight_all = 1
