@@ -27,9 +27,11 @@ call plug#begin('~/.vim/plugged')
 " Tree explorer
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 " Class/module browser
-Plug 'majutsushi/tagbar'
+" Plug 'majutsushi/tagbar'
 " Code and files fuzzy finder
+Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 " Distraction free
 Plug 'junegunn/goyo.vim'
@@ -42,7 +44,7 @@ Plug 'vim-airline/vim-airline-themes'
 " Terminal Vim with 256 colors colorscheme
 Plug 'fisadev/fisa-vim-colorscheme'
 " Pending tasks list
-Plug 'fisadev/FixedTaskList.vim'
+" Plug 'fisadev/FixedTaskList.vim'
 " Surround
 Plug 'tpope/vim-surround'
 " Indent text object
@@ -54,27 +56,27 @@ Plug 'davidhalter/jedi-vim'
 " Better autocompletion
 Plug 'Shougo/neocomplcache.vim'
 " Snippets manager (SnipMate), dependencies, and snippets repo
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
-Plug 'honza/vim-snippets'
-Plug 'garbas/vim-snipmate'
+" Plug 'MarcWeber/vim-addon-mw-utils'
+" Plug 'tomtom/tlib_vim'
+" Plug 'honza/vim-snippets'
+" Plug 'garbas/vim-snipmate'
 " Git/mercurial/others diff icons on the side of the file lines
 Plug 'mhinz/vim-signify'
 " Automatically sort python imports
-Plug 'fisadev/vim-isort'
+" Plug 'fisadev/vim-isort'
 " Drag visual blocks arround
-Plug 'fisadev/dragvisuals.vim'
+" Plug 'fisadev/dragvisuals.vim'
 " Window chooser
-Plug 't9md/vim-choosewin'
+" Plug 't9md/vim-choosewin'
 " Python and other languages code checker
 Plug 'scrooloose/syntastic'
 " Paint css colors with the real color
-Plug 'lilydjwg/colorizer'
+" Plug 'lilydjwg/colorizer'
 " Python 3.7 syntax
 Plug 'vim-python/python-syntax'
 if has('python')
     " YAPF formatter for Python
-    Plug 'pignacio/vim-yapf-format'
+ "    Plug 'pignacio/vim-yapf-format'
 endif
 
 " Plugins from vim-scripts repos:
@@ -84,7 +86,7 @@ Plug 'vim-scripts/IndexedSearch'
 " XML/HTML tags navigation
 Plug 'vim-scripts/matchit.zip'
 " Yank history navigation
-Plug 'vim-scripts/YankRing.vim'
+" Plug 'vim-scripts/YankRing.vim'
 " Tetris!
 Plug 'vim-scripts/TeTrIs.vim'
 
@@ -109,6 +111,13 @@ set nocompatible
 " allow plugins by file type (required for plugins!)
 filetype plugin on
 filetype indent on
+
+" splits
+set splitbelow splitright
+
+" enable folding
+set foldmethod=indent
+set foldlevel=9
 
 " tabs and spaces handling
 set expandtab
@@ -146,8 +155,10 @@ map tm :tabm
 map tt :tabnew 
 map ts :tab split<CR>
 map <C-S-Right> :tabn<CR>
+tmap <C-S-Right> <c-w>:tabn<CR>
 imap <C-S-Right> <ESC>:tabn<CR>
 map <C-S-Left> :tabp<CR>
+tmap <C-S-Left> <c-w>:tabp<CR>
 imap <C-S-Left> <ESC>:tabp<CR>
 
 " navigate windows with ctrl+arrows
@@ -155,6 +166,10 @@ map <C-Right> <c-w>l
 map <C-Left> <c-w>h
 map <C-Up> <c-w>k
 map <C-Down> <c-w>j
+tmap <C-Right> <c-w>l
+tmap <C-Left> <c-w>h
+tmap <C-Up> <c-w>k
+tmap <C-Down> <c-w>j
 imap <C-Right> <ESC><c-w>l
 imap <C-Left> <ESC><c-w>h
 imap <C-Up> <ESC><c-w>k
@@ -167,11 +182,11 @@ nnoremap gb :Buffers<CR>
 tnoremap <C-W>gb <C-W>:Buffers<CR>
 nnoremap gl :Lines<CR>
 tnoremap <C-W>gl <C-W>:Lines<CR>
-nnoremap <F2> :mksession! Session.vim<CR>
-nnoremap <F3> :source Session.vim<CR>
 nnoremap <F12> :term<CR>
+nnoremap <S-F12> :vert term<CR>
 command! ReloadConf source ~/.vimrc
-command! Conf edit ~/.vimrc
+command! EditConf edit ~/.vimrc
+nnoremap <space> za
 
 " reopen files on last position
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -187,7 +202,7 @@ let g:airline#extensions#tabline#show_splits = 0
 " Comment this line to enable autocompletion preview window
 " (displays documentation related to the selected completion option)
 " Disabled by default because preview makes the window flicker
-" set completeopt-=preview
+set completeopt-=preview
 
 " save as sudo
 ca w!! w !sudo tee "%"
@@ -199,13 +214,17 @@ nmap ,wr :Ack <cword><CR>
 " use 256 colors when possible
 if (&term =~? 'mlterm\|xterm\|xterm-256\|screen-256') || has('nvim')
 	let &t_Co = 256
-    colorscheme fisa
+    if ($ITERM_PROFILE == 'Default')
+        colorscheme fisa
+    else
+        colorscheme morning
+    endif
 else
     colorscheme delek
 endif
 
-" when scrolling, keep cursor 3 lines away from screen border
-set scrolloff=3
+" when scrolling, keep cursor lines away from screen border
+set scrolloff=2
 
 " autocompletion of files and commands behaves like shell
 " (complete only the common part, list the options that match)
@@ -264,14 +283,15 @@ map <F2> :TaskList<CR>
 nmap <leader>e :Errors<CR>
 " check also when just opened the file
 let g:syntastic_check_on_open = 1
+let g:syntastic_python_checkers = ['python3']
 " don't put icons on the sign column (it hides the vcs status icons of signify)
 let g:syntastic_enable_signs = 0
 " custom icons (enable them if you use a patched font, and enable the previous 
 " setting)
-"let g:syntastic_error_symbol = '✗'
-"let g:syntastic_warning_symbol = '⚠'
-"let g:syntastic_style_error_symbol = '✗'
-"let g:syntastic_style_warning_symbol = '⚠'
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_style_error_symbol = '✗'
+let g:syntastic_style_warning_symbol = '⚠'
 
 " Jedi-vim ------------------------------
 
@@ -293,15 +313,15 @@ nmap ,D :tab split<CR>:call jedi#goto()<CR>
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_ignore_case = 1
 let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_enable_auto_select = 1
+let g:neocomplcache_enable_auto_select = 0
 let g:neocomplcache_enable_fuzzy_completion = 1
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
-let g:neocomplcache_fuzzy_completion_start_length = 1
-let g:neocomplcache_auto_completion_start_length = 1
-let g:neocomplcache_manual_completion_start_length = 1
-let g:neocomplcache_min_keyword_length = 1
-let g:neocomplcache_min_syntax_length = 1
+let g:neocomplcache_fuzzy_completion_start_length = 3
+let g:neocomplcache_auto_completion_start_length = 2
+let g:neocomplcache_manual_completion_start_length = 2
+let g:neocomplcache_min_keyword_length = 2
+let g:neocomplcache_min_syntax_length = 2
 " complete with workds from any opened file
 let g:neocomplcache_same_filetype_lists = {}
 let g:neocomplcache_same_filetype_lists._ = '_'
