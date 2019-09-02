@@ -27,15 +27,14 @@ call plug#begin('~/.vim/plugged')
 " Tree explorer
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
-Plug 'Xuyuanp/nerdtree-git-plugin'
 " Class/module browser
 " Plug 'majutsushi/tagbar'
 " Code and files fuzzy finder
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 " Distraction free
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
+" Plug 'junegunn/goyo.vim'
+" Plug 'junegunn/limelight.vim'
 " Visual parenthesis
 Plug 'junegunn/rainbow_parenthesis.vim'
 " Airline
@@ -48,9 +47,9 @@ Plug 'fisadev/fisa-vim-colorscheme'
 " Surround
 Plug 'tpope/vim-surround'
 " Indent text object
-Plug 'tweekmonster/braceless.vim'
+" Plug 'tweekmonster/braceless.vim'
 " Indentation based movements
-Plug 'jeetsukumaran/vim-indentwise'
+" Plug 'jeetsukumaran/vim-indentwise'
 " Python autocompletion, go to definition.
 Plug 'davidhalter/jedi-vim'
 " Better autocompletion
@@ -61,7 +60,7 @@ Plug 'Shougo/neocomplcache.vim'
 " Plug 'honza/vim-snippets'
 " Plug 'garbas/vim-snipmate'
 " Git/mercurial/others diff icons on the side of the file lines
-Plug 'mhinz/vim-signify'
+" Plug 'mhinz/vim-signify'
 " Automatically sort python imports
 " Plug 'fisadev/vim-isort'
 " Drag visual blocks arround
@@ -69,7 +68,7 @@ Plug 'mhinz/vim-signify'
 " Window chooser
 " Plug 't9md/vim-choosewin'
 " Python and other languages code checker
-Plug 'scrooloose/syntastic'
+" Plug 'scrooloose/syntastic'
 " Paint css colors with the real color
 " Plug 'lilydjwg/colorizer'
 " Python 3.7 syntax
@@ -88,7 +87,7 @@ Plug 'vim-scripts/matchit.zip'
 " Yank history navigation
 " Plug 'vim-scripts/YankRing.vim'
 " Tetris!
-Plug 'vim-scripts/TeTrIs.vim'
+" Plug 'vim-scripts/TeTrIs.vim'
 
 " Tell vim-plug we finished declaring plugins, so it can load them
 call plug#end()
@@ -149,11 +148,6 @@ syntax on
 set rnu
 
 " tab navigation mappings
-map tn :tabn<CR>
-map tp :tabp<CR>
-map tm :tabm 
-map tt :tabnew 
-map ts :tab split<CR>
 map <C-S-Right> :tabn<CR>
 tmap <C-S-Right> <c-w>:tabn<CR>
 imap <C-S-Right> <ESC>:tabn<CR>
@@ -176,6 +170,7 @@ imap <C-Up> <ESC><c-w>k
 imap <C-Down> <ESC><c-w>j
 
 " my shortcuts from old config
+nnoremap <F5> :!clear;python3 %<CR>
 nnoremap <C-P> :FZF<CR>
 tnoremap <C-W><C-P> <C-W>:FZF<CR>
 nnoremap gb :Buffers<CR>
@@ -187,6 +182,7 @@ nnoremap <S-F12> :vert term<CR>
 command! ReloadConf source ~/.vimrc
 command! EditConf edit ~/.vimrc
 nnoremap <space> za
+nnoremap <C-Tab> <C-^>
 
 " reopen files on last position
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
